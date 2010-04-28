@@ -1,9 +1,11 @@
 package com.leonardsouza.display.layouts
 {
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 	
+	import mx.controls.Image;
 	import mx.core.ILayoutElement;
 	import mx.core.IVisualElement;
 	import mx.core.UIComponent;
@@ -19,9 +21,8 @@ package com.leonardsouza.display.layouts
 		
 		private var _brightnessScale:uint;
 		
-		private var _granularity:uint;
-		private var _requestedRowCount:uint;
-		private var _requestedColumnCount:uint;
+		private var _granularity:uint = 200;
+		private var _image:Image;
 		
 		protected var _layoutVector:Vector.<Vector3D>;
 
@@ -29,11 +30,22 @@ package com.leonardsouza.display.layouts
 		** Constructor
 		*/
 
-		public function ImageLayout(bitmap:Bitmap = null):void { super(); arrangeByBitmap(bitmap); }
+		public function ImageLayout():void { super(); }
 
 		/*
 		** Getter & Setters
 		*/
+		
+		public function get image():Image
+		{
+			return _image;
+		}
+		
+		public function set image(value:Image):void
+		{
+			_image = value;
+			updateDisplayList(target.width, target.height);
+		}
 		
 		public function get brightnessScale():uint
 		{
@@ -56,54 +68,17 @@ package com.leonardsouza.display.layouts
 		{
 			_brightnessScale = value;
 		}
-
-		public function get requestedRowCount():uint
-		{
-			return _requestedRowCount;
-		}
-		
-		[Inspectable(category="Layout Contraints", defaultValue=10)]
-		public function set requestedRowCount(value:uint):void
-		{
-			_requestedRowCount = value;
-		}
-		
-		public function get requestedColumnCount():uint
-		{
-			return _requestedColumnCount;
-		}
-		
-		[Inspectable(category="Layout Contraints", defaultValue=10)]
-		public function set requestedColumnCount(value:uint):void
-		{
-			_requestedColumnCount = value;
-		}
 		
 		/*
 		** Public functions
 		*/
 		
-		public function arrangeByBitmap(bitmap:Bitmap):void
+		public function arrangeByImage():void
 		{
 			if (!target) return;
 			
-			if (bitmap != null)
-			{
-				
-			}
-			else
-			{
-				_layoutVector = new Vector.<Vector3D>();
-				for (var i:int = 0; i <= requestedRowCount; i++)
-				{
-					for (var j:int = 0; j <= requestedColumnCount; j++)
-					{
-						_layoutVector[j + i] = new Vector3D(i, j, i+j);
-					}
-				}
-			}
-			
-			updateDisplayList(target.width, target.height);
+			var columnCount:Number = image.width / granularity;
+			var rowCount:Number = image.height / granularity;
 		}
 
 		/*
@@ -112,19 +87,49 @@ package com.leonardsouza.display.layouts
 		
 		override public function updateDisplayList(w:Number, h:Number):void
 		{
-			if (!target) return;
+			if (!target || !image) return;
 			super.updateDisplayList(w, h);
+
+			arrangeByImage();
 			
 			var el:ILayoutElement;
 			var numElements:uint = target.numElements;
+			var matrix:Matrix3D;
+			var i:int = 0;
 			
-			for (var i:int = 0; i < numElements; i++);
+			if (!_layoutVector)
 			{
-				el = target.getElementAt(i);
-				if (!el || !el.includeInLayout || _layoutVector[i] != null) continue;
-
-				var matrix:Matrix3D = new Matrix3D(_layoutVector[i]);
-				el.setLayoutMatrix3D(matrix, false);
+				for (i = 0; i < numElements; i++)
+				{
+					el = target.getElementAt(i);
+					if (!el || !el.includeInLayout) continue;
+						
+					matrix = new Matrix3D();
+					matrix.appendTranslation(0, 0, 0);
+					el.setLayoutMatrix3D(matrix, false);					
+				}			
+				return;
+			}
+			
+			var vec3D:Vector3D;
+			
+			for (i = 0; i < numElements; i++)
+			{
+				try
+				{
+					el = target.getElementAt(i);
+					vec3D = _layoutVector[i];
+					
+					if (!el || !el.includeInLayout) continue;
+					
+					matrix = new Matrix3D();
+					matrix.appendTranslation(vec3D.x, vec3D.y, vec3D.z);
+					el.setLayoutMatrix3D(matrix, false);					
+				}
+				catch (error:RangeError)
+				{
+					break;
+				}
 			}
 		}
 		

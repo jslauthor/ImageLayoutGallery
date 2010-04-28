@@ -75,8 +75,6 @@ package org.robotlegs.demos.imagegallery.views.mediators
 			
 			eventDispatcher.dispatchEvent( new GalleryEvent( GalleryEvent.LOAD_GALLERY ) );
 			
-			galleryView.animatedLayout.isPieces = true;
-			
 			var filter:Rotate3D = new Rotate3D();
 			filter.autoCenterProjection = true;
 			filter.autoCenterTransform = true;
@@ -98,45 +96,7 @@ package org.robotlegs.demos.imagegallery.views.mediators
 		
 		protected function selectImage(image:GalleryImage):void
 		{
-			galleryView.animatedLayout.isPieces = galleryView.animatedLayout.isPieces ? false : true;
-			
-			if (!galleryView.animatedLayout.isPieces)
-				dispatch(new GallerySearchEvent(GallerySearchEvent.SEARCH_NOT_AVAILABLE));
-			else
-				dispatch(new GallerySearchEvent(GallerySearchEvent.SEARCH_AVAILABLE));
-			
-			progress.alpha = 0;
-			PopUpManager.addPopUp(progress, galleryView, false);
-			PopUpManager.centerPopUp(progress);
-			
-			var toY:int = progress.y;
-			progress.y = -progress.height;
 
-			var tween1:GTween = new GTween(progress, .5, {alpha:1}, {ease:Sine.easeOut});
-			var tween2:GTween = new GTween(progress, .5, {y:toY}, {ease:Back.easeOut});
-			
-			var loader:Loader = new Loader();
-			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, 
-				function f(event:Event):void 
-				{ 
-					selectedImageVector = divideAndConquer(Bitmap(event.target.content));
-					var tween1:GTween = new GTween(progress, .5, {alpha:0}, {ease:Sine.easeIn});
-					var tween2:GTween = new GTween(progress, .5, {y:galleryView.height}, {ease:Back.easeIn});
-					tween2.dispatchEvents = true;
-					tween2.addEventListener(Event.COMPLETE, function f():void 
-					{
-						galleryView.animatedLayout.animateFlip(selectedImageVector);
-					});
-				});
-			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, 
-				function f(event:IOErrorEvent):void 
-				{ 
-					var tween1:GTween = new GTween(progress, .5, {alpha:0}, {ease:Sine.easeIn});
-					var tween2:GTween = new GTween(progress, .5, {y:galleryView.height}, {ease:Back.easeIn});
-					Alert.show("Error loading image!");
-				});
-				
-			loader.load(new URLRequest(image.URL));
 		}
 		
 		protected function onGalleryLoaded(event:GalleryEvent):void
@@ -149,41 +109,5 @@ package org.robotlegs.demos.imagegallery.views.mediators
 		{
 			selectImage(event.image);
 		}
-		
-		private function divideAndConquer(source:Bitmap, rectWidth:int = 30, rectHeight:int = 30):Vector.<BitmapData>
-		{
-			var columns:int = galleryView.animatedLayout.requestedColumnCount;
-			var rows:int = galleryView.animatedLayout.requestedRowCount;
-			
-			var background:BitmapData = new BitmapData(galleryView.dgContainer.width, galleryView.dgContainer.height, false, 0x000000);
-			var bgActualHeight:Number = background.height - (galleryView.animatedLayout.verticalGap * galleryView.animatedLayout.requestedRowCount) + galleryView.animatedLayout.verticalGap;
-			var bgActualWidth:Number = background.width - (galleryView.animatedLayout.horizontalGap * galleryView.animatedLayout.requestedColumnCount) + galleryView.animatedLayout.horizontalGap;
-			
-			var scaleFactor:Number = getScaleFactor(source, bgActualWidth, bgActualHeight);
-			var matrix:Matrix = new Matrix(scaleFactor, 0, 0, scaleFactor, (bgActualWidth/2 - (source.width*scaleFactor)/2), (bgActualHeight/2 - (source.height*scaleFactor)/2));
-			background.draw(source.bitmapData, matrix); 
-			
-			var bitmapVector:Vector.<BitmapData> = new Vector.<BitmapData>();
-			for (var i:int = 0; i < rows; i++)
-			{
-				for (var j:int = 0; j < columns; j++)
-				{
-					var rect:Rectangle = new Rectangle(j * rectWidth, i * rectHeight, rectWidth, rectHeight);
-					var bm:BitmapData = new BitmapData(rectWidth, rectHeight, false, 0x000000);
-					bm.copyPixels(background, rect, new Point());
-					bitmapVector.push(bm);
-				}
-			}
-			return bitmapVector;
-		}
-		
-		private function getScaleFactor(source:Bitmap, bgActualWidth:Number, bgActualHeight:Number):Number
-		{
-			if (bgActualWidth >= bgActualHeight)
-				return bgActualWidth / source.width;
-			else
-				return bgActualHeight / source.height;
-		}
-		
 	}
 }

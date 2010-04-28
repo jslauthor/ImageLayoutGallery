@@ -17,7 +17,7 @@
 	width="800" height="800" 
 	creationComplete="creationCompleteHandler(event)" 
 	xmlns:components="org.robotlegs.demos.imagegallery.views.components.*" 
-	xmlns:layouts="org.robotlegs.demos.imagegallery.views.components.layouts.*">
+	xmlns:layouts="com.leonardsouza.display.layouts.*">
 	
 	<s:layout>
 		<s:BasicLayout/>
@@ -128,9 +128,8 @@
 			dataProvider="{this.dataProvider}"
 			itemRenderer="org.robotlegs.demos.imagegallery.views.components.renderers.GalleryImageThumbnailItemRenderer">
 			<s:layout>
-				<layouts:GalleryTileLayout
-					id="animatedLayout"
-					verticalGap="5" horizontalGap="5" requestedColumnCount="20" requestedRowCount="10" />
+				<layouts:ImageLayout
+					id="imageLayout" />
 			</s:layout>
 		</s:DataGroup>	
 		
