@@ -3,6 +3,7 @@ package com.leonardsouza.display.layouts
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Matrix3D;
+	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	
 	import mx.controls.Image;
@@ -79,6 +80,7 @@ package com.leonardsouza.display.layouts
 			
 			var columnCount:Number = image.width / granularity;
 			var rowCount:Number = image.height / granularity;
+			var rect:Rectangle = new Rectangle(0, 0, image.width / columnCount, image.height / rowCount);
 		}
 
 		/*
