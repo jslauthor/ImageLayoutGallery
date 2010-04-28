@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Inversion of Control/Dependency Injection Using Robotlegs
+	Image Gallery
+	
+	Any portion of this demonstration may be reused for any purpose where not 
+	licensed by another party restricting such use. Please leave the credits intact.
+	
+	Joel Hooks
+	http://joelhooks.com
+	joelhooks@gmail.com 
+
+	Modified much to Joel's chagrin by Leonard Souza 
+	http://www.leonardsouza.com
+	hey@leonardsouza.com
+
+-->
+<s:ItemRenderer 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	useHandCursor="true"
+	mouseEnabled="true"
+	buttonMode="true"
+	autoDrawBackground="false"
+	width="30" 
+	height="30"	
+	click="clickHandler(event)">
+
+	<fx:Script>
+		<![CDATA[
+			import org.robotlegs.demos.imagegallery.events.GalleryImageEvent;
+			import org.robotlegs.demos.imagegallery.models.vo.GalleryImage;
+			
+			private var _imagePiece:BitmapData;
+			private var _origImage:BitmapData;
+			private var _isPiece:Boolean = false;
+			
+			[Bindable] protected var image:GalleryImage;
+			
+			override public function set data(value:Object):void
+			{
+				super.data = value;
+				this.image = value as GalleryImage;
+			}			
+
+			public function get imagePiece():BitmapData
+			{
+				return _imagePiece;
+			}
+			
+			public function set imagePiece(value:BitmapData):void
+			{
+				_imagePiece = value;
+			}
+
+			public function get isPiece():Boolean
+			{
+				return _isPiece;
+			}
+			
+			public function set isPiece(value:Boolean):void
+			{
+				_isPiece = value;
+			}
+			
+			/* Functions */
+			
+			public function showPiece():void
+			{
+				if (imagePiece != null)
+				{
+					var bm:BitmapData = new BitmapData(img.width, img.height, false);
+					bm.draw(img);
+					_origImage = bm;
+					img.source = new Bitmap(imagePiece);
+					_isPiece = true;
+				}
+			}
+			
+			public function showThumb():void
+			{
+				if (image != null)
+				{
+					img.source = new Bitmap(_origImage);
+					_isPiece = false;
+				}
+			}
+			
+			/* Event Handlers */
+			
+			protected function clickHandler(event:MouseEvent):void
+			{
+				owner.dispatchEvent(new GalleryImageEvent(GalleryImageEvent.SELECT_GALLERY_IMAGE, image));
+			}
+
+		]]>
+	</fx:Script>
+
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	
+	<s:Rect width="100%" height="100%">
+		<s:fill>
+			<s:SolidColor color="#000000" />
+		</s:fill>
+	</s:Rect>
+	
+	<mx:Image
+		id="img"
+		smoothBitmapContent="true"
+		height="100%"
+		width="100%"
+		source="{image.thumbURL}"/>
+	
+</s:ItemRenderer>

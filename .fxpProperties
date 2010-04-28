@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<fxpProperties abbreviated="false" authoringTool="Flex Builder" compiles="true" parentProject="ac655a3f-bc88-4376-9b38-2b45b26fceed" projectUUID="ac655a3f-bc88-4376-9b38-2b45b26fceed" sdkVersion="4.0.0" uuid="06fb6138-9ab5-4f50-bb20-d1580f887882" version="4">
+  <projects/>
+  <src>
+    <linked isMain="false" location="tests" path="tests" position="0" uuid="06fb6138-9ab5-4f50-bb20-d1580f887882"/>
+  </src>
+  <swc>
+    <linked location="sdkPlaceHolder" path="sdkPlaceHolder" position="0" uuid="06fb6138-9ab5-4f50-bb20-d1580f887882"/>
+    <linked location="E:/workspace/RobotlegsFlickrGallery/libs" path="/libs" position="1" uuid="06fb6138-9ab5-4f50-bb20-d1580f887882"/>
+  </swc>
+  <misc/>
+  <theme/>
+</fxpProperties>
