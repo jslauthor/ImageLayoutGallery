@@ -95,7 +95,7 @@
 			maintainProjectionCenter="true">
 			
 			<s:layout>
-				<layouts:CircularLayout radius="30" id="circularLayout" />
+				<layouts:ImageLayout radius="30" id="circularLayout" />
 			</s:layout>
 			
 			<s:Label text="LOADING" />

@@ -1734,6 +1734,8 @@ package org.robotlegs.demos.imagegallery.views.components.layouts
 		private var _oldHorizontalGap:int;
 		private var _oldVerticalGap:int;
 		
+		
+		
 		public function animateFlip(vec:Vector.<BitmapData> = null):void
 		{
 			if (_flipEffects != null && _flipEffects.isPlaying) return;
