@@ -80,7 +80,19 @@ package com.leonardsouza.display.layouts
 			
 			var columnCount:Number = image.width / granularity;
 			var rowCount:Number = image.height / granularity;
-			var rect:Rectangle = new Rectangle(0, 0, image.width / columnCount, image.height / rowCount);
+			var rectWidth:Number = image.width / columnCount;
+			var rectHeight:Number = image.height / rowCount;
+			
+			var i:int;
+			var j:int;
+			
+			for (i = 0; i <= rowCount; i++)
+			{
+				for (j = 0; j <= columnCount; j++)
+				{
+					
+				}
+			}
 		}
 
 		/*
