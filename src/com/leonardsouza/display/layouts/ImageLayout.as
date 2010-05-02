@@ -11,6 +11,8 @@ package com.leonardsouza.display.layouts
 	import mx.core.IVisualElement;
 	import mx.core.UIComponent;
 	
+	import org.flexunit.internals.namespaces.classInternal;
+	
 	import spark.layouts.supportClasses.LayoutBase;
 	
 	public class ImageLayout extends LayoutBase
@@ -20,32 +22,31 @@ package com.leonardsouza.display.layouts
 		** Variable declarations
 		*/
 		
-		private var _brightnessScale:uint;
-		
+		private var _brightnessScale:uint = 100;
 		private var _granularity:uint = 200;
-		private var _image:Image;
+		private var _source:Bitmap;
 		
 		protected var _layoutVector:Vector.<Vector3D>;
 
 		/*
-		** Constructor
+		** Constructor and Initialization
 		*/
 
 		public function ImageLayout():void { super(); }
-
+		
 		/*
 		** Getter & Setters
 		*/
 		
-		public function get image():Image
+		public function get source():Bitmap
 		{
-			return _image;
+			return _source;
 		}
 		
-		public function set image(value:Image):void
+		public function set source(value:Bitmap):void
 		{
-			_image = value;
-			updateDisplayList(target.width, target.height);
+			_source = value;
+			if (target) target.invalidateDisplayList();
 		}
 		
 		public function get brightnessScale():uint
@@ -76,12 +77,14 @@ package com.leonardsouza.display.layouts
 		
 		public function arrangeByImage():void
 		{
-			if (!target) return;
+			if (!target || !_source) return;
 			
-			var columnCount:Number = image.width / granularity;
-			var rowCount:Number = image.height / granularity;
-			var rectWidth:Number = image.width / columnCount;
-			var rectHeight:Number = image.height / rowCount;
+			var columnCount:Number = _source.width / granularity;
+			var rowCount:Number = _source.height / granularity;
+			var rectWidth:Number = _source.width / columnCount;
+			var rectHeight:Number = _source.height / rowCount;
+			
+			trace(_source.height, _source.width, columnCount, rowCount, rectWidth, rectHeight);
 			
 			var i:int;
 			var j:int;
@@ -101,7 +104,8 @@ package com.leonardsouza.display.layouts
 		
 		override public function updateDisplayList(w:Number, h:Number):void
 		{
-			if (!target || !image) return;
+			trace("Update Display");
+			if (!target || !_source) return;
 			super.updateDisplayList(w, h);
 
 			arrangeByImage();

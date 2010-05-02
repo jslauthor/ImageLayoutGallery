@@ -37,6 +37,7 @@ package org.robotlegs.demos.imagegallery.views.mediators
 	import mx.controls.Alert;
 	import mx.controls.Image;
 	import mx.core.Application;
+	import mx.core.BitmapAsset;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElement;
 	import mx.managers.PopUpManager;
@@ -62,8 +63,8 @@ package org.robotlegs.demos.imagegallery.views.mediators
 		[Inject]
 		public var proxy:GalleryModel;
 		
-		private var progress:GallerySearchProgress = new GallerySearchProgress();
-		private var selectedImageVector:Vector.<BitmapData>;
+		[Embed('assets/RobotLegsLogoSmallWeb.png')]
+		public var layoutBitmap:Class; 
 
 		override public function onRegister():void
 		{
@@ -79,6 +80,9 @@ package org.robotlegs.demos.imagegallery.views.mediators
 			filter.autoCenterProjection = true;
 			filter.autoCenterTransform = true;
 			galleryView.rotateFilter = filter;
+			
+			var bit:BitmapAsset = new layoutBitmap() as BitmapAsset
+			galleryView.imageLayout.source = new Bitmap(bit.bitmapData);
 		}
 		
 		protected function onContainerRollOut(event:MouseEvent):void

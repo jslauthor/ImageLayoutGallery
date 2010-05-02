@@ -128,8 +128,7 @@
 			dataProvider="{this.dataProvider}"
 			itemRenderer="org.robotlegs.demos.imagegallery.views.components.renderers.GalleryImageThumbnailItemRenderer">
 			<s:layout>
-				<layouts:ImageLayout
-					id="imageLayout" />
+				<layouts:ImageLayout id="imageLayout"/>
 			</s:layout>
 		</s:DataGroup>	
 		
