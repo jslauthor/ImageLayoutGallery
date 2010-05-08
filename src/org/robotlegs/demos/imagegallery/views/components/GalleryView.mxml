@@ -122,15 +122,38 @@
 				<s:SolidColor color="#FFFFFF" alpha="0"/>
 			</s:fill>
 		</s:Rect>
-		
+
 		<s:DataGroup 
 			id="dgThumbnails"
 			dataProvider="{this.dataProvider}"
-			itemRenderer="org.robotlegs.demos.imagegallery.views.components.renderers.GalleryImageThumbnailItemRenderer">
+			width="650"
+			height="650">
 			<s:layout>
-				<layouts:ImageLayout id="imageLayout"/>
+				<layouts:ImageLayout
+					depthFactor="-15"
+					gridInterval="25"
+					contrastThreshold="1"
+					id="imageLayout"/>
 			</s:layout>
 		</s:DataGroup>	
+
+		
+		<!--
+		<s:DataGroup 
+			id="dgThumbnails"
+			dataProvider="{this.dataProvider}"
+			itemRenderer="org.robotlegs.demos.imagegallery.views.components.renderers.GalleryImageThumbnailItemRenderer"
+			width="600"
+			height="600">
+			<s:layout>
+				<layouts:ImageLayout
+					depthFactor="-15"
+					gridInterval="25"
+					contrastThreshold="1"
+					id="imageLayout"/>
+			</s:layout>
+		</s:DataGroup>
+		-->
 		
 	</s:Group>
 

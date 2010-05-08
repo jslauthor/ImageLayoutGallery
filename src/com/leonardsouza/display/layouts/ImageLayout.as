@@ -3,16 +3,19 @@ package com.leonardsouza.display.layouts
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Matrix3D;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	
 	import mx.controls.Image;
+	import mx.core.FlexGlobals;
 	import mx.core.ILayoutElement;
 	import mx.core.IVisualElement;
 	import mx.core.UIComponent;
 	
 	import org.flexunit.internals.namespaces.classInternal;
 	
+	import spark.components.supportClasses.GroupBase;
 	import spark.layouts.supportClasses.LayoutBase;
 	
 	public class ImageLayout extends LayoutBase
@@ -22,9 +25,11 @@ package com.leonardsouza.display.layouts
 		** Variable declarations
 		*/
 		
-		private var _brightnessScale:uint = 100;
-		private var _granularity:uint = 200;
+		private var _contrastThreshold:uint = 50;
+		private var _gridInterval:uint = 10;
 		private var _source:Bitmap;
+		private var _requiredElements:int;
+		private var _depthFactor:int = 10;
 		
 		protected var _layoutVector:Vector.<Vector3D>;
 
@@ -49,62 +54,116 @@ package com.leonardsouza.display.layouts
 			if (target) target.invalidateDisplayList();
 		}
 		
-		public function get brightnessScale():uint
+		public function get contrastThreshold():uint
 		{
-			return _brightnessScale;
+			return _contrastThreshold;
 		}
 
-		[Inspectable(category="Layout Constraints", defaultValue=200)]
-		public function get granularity():uint
+		[Inspectable(category="Layout Constraints", defaultValue=50)]
+		public function set contrastThreshold(value:uint):void
 		{
-			return _granularity;
+			_contrastThreshold = value;
+			if (target) target.invalidateDisplayList();
 		}
 		
-		public function set granularity(value:uint):void
+		[Inspectable(category="Layout Constraints", defaultValue=10)]
+		public function get gridInterval():uint
 		{
-			_granularity = value;
+			return _gridInterval;
 		}
 		
-		[Inspectable(category="Layout Constraints", defaultValue=100)]
-		public function set brightnessScale(value:uint):void
+		public function set gridInterval(value:uint):void
 		{
-			_brightnessScale = value;
+			_gridInterval = value < 1 ? 1 : value;
+			
+			if (target) target.invalidateDisplayList();
+		}
+
+		[Inspectable(category="Layout Constraints", defaultValue=10)]
+		public function get depthFactor():int
+		{
+			return _depthFactor;
+		}
+		
+		public function set depthFactor(value:int):void
+		{
+			_depthFactor = value;
+		}
+		
+		public function get requiredElements():int
+		{
+			return _requiredElements;
+		}
+		
+		public function set requiredElements(value:int):void
+		{
+			_requiredElements = value;
 		}
 		
 		/*
-		** Public functions
+		** Protected functions
 		*/
 		
-		public function arrangeByImage():void
+		protected function arrangeByImage():void
 		{
 			if (!target || !_source) return;
 			
-			var columnCount:Number = _source.width / granularity;
-			var rowCount:Number = _source.height / granularity;
-			var rectWidth:Number = _source.width / columnCount;
-			var rectHeight:Number = _source.height / rowCount;
+			_layoutVector = new Vector.<Vector3D>();
 			
-			trace(_source.height, _source.width, columnCount, rowCount, rectWidth, rectHeight);
+			// scale the image to the width and height of the target to interpolate the points
+			var nonScaledWidth:int = _source.width / _source.scaleX;
+			var nonScaledHeight:int = _source.height / _source.scaleY;
+trace("SCALED " + nonScaledWidth + " " + nonScaledHeight);
+			_source.scaleX = target.width / nonScaledWidth;
+			_source.scaleY = target.height / nonScaledHeight;
 			
-			var i:int;
-			var j:int;
+			var scaledSource:BitmapData = new BitmapData(_source.width, _source.height, true, 0x000000);
+			scaledSource.draw(_source, _source.transform.matrix);
+
+			var rectWidth:Number = _source.width / gridInterval;
+			var rectHeight:Number = _source.height / gridInterval;
 			
-			for (i = 0; i <= rowCount; i++)
+			var columnCount:Number = _source.width / rectWidth;
+			var rowCount:Number = _source.height / rectHeight;
+			
+			var i:Number;
+			var j:Number;
+			
+			var reqElements:int = 0;
+			
+			for (i = 0; i < rowCount; i++)
 			{
-				for (j = 0; j <= columnCount; j++)
+				for (j = 0; j < columnCount; j++)
 				{
+					var rect:Rectangle = new Rectangle(j * rectWidth, i * rectHeight, rectWidth, rectHeight);
+					var bm:BitmapData = new BitmapData(rectWidth, rectHeight, false, 0x000000);
+					bm.copyPixels(scaledSource, rect, new Point(0, 0));
+
+					var brightnessPercentage:Number = averageColor(bm)/0xFFFFFF;
+					if (brightnessPercentage * 100 >= contrastThreshold)
+					{
+						_layoutVector.push(new Vector3D(j * rectWidth, i * rectHeight, brightnessPercentage * depthFactor));	
+						reqElements++;
+					}
+					else
+					{
+						_layoutVector.push(null);
+					}
 					
+					bm.dispose();
 				}
 			}
+			
+			requiredElements = reqElements;
+			scaledSource.dispose();
 		}
-
+		
 		/*
 		** Overrides
 		*/
 		
 		override public function updateDisplayList(w:Number, h:Number):void
 		{
-			trace("Update Display");
 			if (!target || !_source) return;
 			super.updateDisplayList(w, h);
 
@@ -128,25 +187,47 @@ package com.leonardsouza.display.layouts
 				}			
 				return;
 			}
-			
+
 			var vec3D:Vector3D;
-			
-			for (i = 0; i < numElements; i++)
+			var elementCounter:int = 0;
+			for (i = 0; i < _layoutVector.length; i++)
 			{
 				try
 				{
-					el = target.getElementAt(i);
+					el = target.getElementAt(elementCounter);
+					if (elementCounter >= numElements) throw RangeError("Not enough elements");
 					vec3D = _layoutVector[i];
-					
-					if (!el || !el.includeInLayout) continue;
-					
-					matrix = new Matrix3D();
-					matrix.appendTranslation(vec3D.x, vec3D.y, vec3D.z);
-					el.setLayoutMatrix3D(matrix, false);					
+					if (vec3D != null)
+					{
+						if (!el || !el.includeInLayout) continue;
+						
+						UIComponent(el).visible = true;
+						matrix = el.getLayoutMatrix3D();
+						var newVector:Vector.<Vector3D> = matrix.decompose();
+						newVector[0] = vec3D;
+						matrix.recompose(newVector);
+						el.setLayoutMatrix3D(matrix, false);	
+						elementCounter++;
+						//trace(el.getLayoutBoundsX() + " " + el.getLayoutBoundsY());
+					}
+					else
+					{
+						UIComponent(el).visible = false;
+					}
 				}
 				catch (error:RangeError)
 				{
-					break;
+					//trace(error.message);
+				}
+			}
+			
+			// Remove any remaining elements from the grid
+			if (elementCounter < numElements)
+			{
+				for (var v:int = elementCounter; v < numElements; v++)
+				{
+					el = target.getElementAt(v);
+					UIComponent(el).visible = false;
 				}
 			}
 		}

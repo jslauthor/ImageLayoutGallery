@@ -42,7 +42,7 @@ package org.robotlegs.demos.imagegallery.remote.services
 		public function loadGallery():void
 		{
 			service.addEventListener(FlickrResultEvent.INTERESTINGNESS_GET_LIST, handleSearchResult);
-			service.interestingness.getList(null,"",200)
+			service.interestingness.getList(null,"",600)
 		}
 		
 		public function search(searchTerm:String):void
@@ -52,7 +52,7 @@ package org.robotlegs.demos.imagegallery.remote.services
 			service.addEventListener(FlickrResultEvent.PHOTOS_SEARCH, handleSearchResult);
 			var p:PhotoSearchParams = new PhotoSearchParams()
 			p.text = searchTerm;
-			p.per_page = 200;
+			p.per_page = 400;
 			p.content_type = 1;
 			p.media = "photo"
 			p.sort = "date-posted-desc";

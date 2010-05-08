@@ -11,6 +11,7 @@
 */
 package org.robotlegs.demos.imagegallery.views.mediators
 {
+
 	import com.gskinner.motion.GTween;
 	import com.gskinner.motion.GTweenTimeline;
 	import com.gskinner.motion.GTweener;
@@ -40,6 +41,7 @@ package org.robotlegs.demos.imagegallery.views.mediators
 	import mx.core.BitmapAsset;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElement;
+	import mx.graphics.SolidColor;
 	import mx.managers.PopUpManager;
 	
 	import org.osmf.layout.AbsoluteLayoutFacet;
@@ -53,7 +55,9 @@ package org.robotlegs.demos.imagegallery.views.mediators
 	import org.robotlegs.demos.imagegallery.views.components.GalleryView;
 	import org.robotlegs.mvcs.Mediator;
 	
+	import spark.components.Group;
 	import spark.effects.Rotate3D;
+	import spark.primitives.Rect;
 
 	public class GalleryViewMediator extends Mediator
 	{
@@ -63,7 +67,7 @@ package org.robotlegs.demos.imagegallery.views.mediators
 		[Inject]
 		public var proxy:GalleryModel;
 		
-		[Embed('assets/RobotLegsLogoSmallWeb.png')]
+		[Embed('assets/smiley.jpg')]
 		public var layoutBitmap:Class; 
 
 		override public function onRegister():void
@@ -74,7 +78,7 @@ package org.robotlegs.demos.imagegallery.views.mediators
 			eventMap.mapListener( galleryView.dgContainer, MouseEvent.MOUSE_MOVE, onContainerMouseMove )
 			eventMap.mapListener( galleryView.dgContainer, MouseEvent.ROLL_OUT, onContainerRollOut )
 			
-			eventDispatcher.dispatchEvent( new GalleryEvent( GalleryEvent.LOAD_GALLERY ) );
+			//eventDispatcher.dispatchEvent( new GalleryEvent( GalleryEvent.LOAD_GALLERY ) );
 			
 			var filter:Rotate3D = new Rotate3D();
 			filter.autoCenterProjection = true;
@@ -83,6 +87,22 @@ package org.robotlegs.demos.imagegallery.views.mediators
 			
 			var bit:BitmapAsset = new layoutBitmap() as BitmapAsset
 			galleryView.imageLayout.source = new Bitmap(bit.bitmapData);
+			
+			// Testing code, please remove
+			var ac:ArrayCollection = new ArrayCollection();
+			for (var p:int = 0; p < 400; p++)
+			{
+				var rect:Rect = new Rect();
+				rect.width = 30;
+				rect.height = 30;
+				rect.fill = new SolidColor(0xFFFFFF, 1);
+				var grp:Group = new Group();
+				grp.alpha = .5
+				grp.addElement(rect);
+				ac.addItem(grp);
+			}
+			galleryView.dataProvider = ac;
+			galleryView.dgThumbnails.invalidateDisplayList();
 		}
 		
 		protected function onContainerRollOut(event:MouseEvent):void
