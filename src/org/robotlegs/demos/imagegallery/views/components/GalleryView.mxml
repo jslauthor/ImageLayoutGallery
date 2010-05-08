@@ -132,7 +132,7 @@
 				<layouts:ImageLayout
 					depthFactor="-15"
 					gridInterval="25"
-					contrastThreshold="1"
+					contrastThreshold="33"
 					id="imageLayout"/>
 			</s:layout>
 		</s:DataGroup>	
