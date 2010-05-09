@@ -67,7 +67,7 @@ package org.robotlegs.demos.imagegallery.views.mediators
 		[Inject]
 		public var proxy:GalleryModel;
 		
-		[Embed('assets/RobotLegsLogoSmallWeb.png')]
+		[Embed('assets/walk_sign.jpg')]
 		public var layoutBitmap:Class; 
 
 		override public function onRegister():void
@@ -90,11 +90,11 @@ package org.robotlegs.demos.imagegallery.views.mediators
 			
 			// Testing code, please remove
 			var ac:ArrayCollection = new ArrayCollection();
-			for (var p:int = 0; p < 600; p++)
+			for (var p:int = 0; p < 900; p++)
 			{
 				var rect:Rect = new Rect();
 				rect.width = 15;
-				rect.height = 15;
+				rect.height = 10;
 				rect.fill = new SolidColor(0xFFFFFF, 1);
 				var grp:Group = new Group();
 				grp.alpha = .5

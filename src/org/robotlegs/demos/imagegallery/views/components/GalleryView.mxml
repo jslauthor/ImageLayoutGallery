@@ -126,13 +126,13 @@
 		<s:DataGroup 
 			id="dgThumbnails"
 			dataProvider="{this.dataProvider}"
-			width="650"
-			height="650">
+			width="400"
+			height="400">
 			<s:layout>
 				<layouts:ImageLayout
 					depthFactor="-15"
-					gridInterval="25"
-					contrastThreshold="33"
+					gridInterval="35"
+					contrastThreshold="15"
 					id="imageLayout"/>
 			</s:layout>
 		</s:DataGroup>	

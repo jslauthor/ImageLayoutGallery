@@ -113,7 +113,7 @@ package com.leonardsouza.display.layouts
 			// scale the image to the width and height of the target to interpolate the points
 			var nonScaledWidth:int = _source.width / _source.scaleX;
 			var nonScaledHeight:int = _source.height / _source.scaleY;
-trace("SCALED " + nonScaledWidth + " " + nonScaledHeight);
+
 			_source.scaleX = target.width / nonScaledWidth;
 			_source.scaleY = target.height / nonScaledHeight;
 			
@@ -208,7 +208,6 @@ trace("SCALED " + nonScaledWidth + " " + nonScaledHeight);
 						matrix.recompose(newVector);
 						el.setLayoutMatrix3D(matrix, false);	
 						elementCounter++;
-						//trace(el.getLayoutBoundsX() + " " + el.getLayoutBoundsY());
 					}
 					else
 					{
