@@ -6,7 +6,7 @@
 			   xmlns:components="com.leonardsouza.demos.imagelayout.views.components.*"
 			   width="100%"
 			   height="100%"
-			   frameRate="120">
+			   frameRate="120" viewSourceURL="srcview/index.html">
 
 	<!--
 	
