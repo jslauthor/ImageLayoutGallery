@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				maxHeight="30"
+				creationComplete="itemrenderer1_creationCompleteHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.core.BitmapAsset;
+			import mx.events.FlexEvent;
+			
+			import spark.skins.spark.DefaultComplexItemRenderer;
+			
+			[Bindable]
+			private var _imageSource:Bitmap;
+			
+			[Bindable]
+			private var _name:String;
+			
+			protected function itemrenderer1_creationCompleteHandler(event:FlexEvent):void
+			{
+				addEventListener(FlexEvent.DATA_CHANGE, function f(event:FlexEvent):void 
+				{	
+					if (data != null) 
+					{
+						_imageSource = data["bitmap"];
+						_name = data["itemName"];
+					}
+				});
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:Group id="contentGroup" verticalCenter="0" left="2" right="2" top="2" bottom="2" />
+	
+	<s:HGroup
+		width="100%"
+		height="100%"
+		verticalAlign="middle">
+		
+		<s:Group
+			id="imageGroup"
+			height="90%"
+			width="{imageGroup.height}">
+			<mx:Image
+				width="80%"
+				height="80%"
+				verticalCenter="0"
+				horizontalCenter="0"
+				source="{_imageSource}"/>			
+		</s:Group>
+		
+		<s:Label
+			text="{_name}"
+			styleName="h3" />
+		
+	</s:HGroup>		
+	
+</s:ItemRenderer>

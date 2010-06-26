@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/halo"
+			   xmlns:imagelayout="com.leonardsouza.demos.imagelayout.*"
+			   xmlns:components="com.leonardsouza.demos.imagelayout.views.components.*"
+			   width="100%"
+			   height="100%"
+			   frameRate="120">
+
+	<!--
+	
+	                                888    888    d8b                                 
+	                                888    888    Y8P                                 
+	                                888    888                                        
+	 .d88b.   .d88b.   .d88b.   .d88888    888888 888 88888b.d88b.   .d88b.  .d8888b  
+	d88P"88b d88""88b d88""88b d88" 888    888    888 888 "888 "88b d8P  Y8b 88K      
+	888  888 888  888 888  888 888  888    888    888 888  888  888 88888888 "Y8888b. 
+	Y88b 888 Y88..88P Y88..88P Y88b 888    Y88b.  888 888  888  888 Y8b.          X88 
+	 "Y88888  "Y88P"   "Y88P"   "Y88888     "Y888 888 888  888  888  "Y8888   88888P' 
+  	     888                                                                          
+	Y8b d88P                                                                          
+	 "Y88P"                                                                           	
+	
+						bringin' it old skool, biatches! xoxo
+	
+	-->
+	
+	
+	<fx:Style>
+		
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace renderers "com.leonardsouza.demos.imagelayout.views.components.renderers.*";
+		
+		.h1
+		{
+			font-size: 14;
+			font-weight: bold;
+			color: #FFFFFF;
+		}
+		
+		.h2
+		{
+			font-size: 12;
+			font-weight: normal;
+			color: #FFFFFF;
+		}
+		
+		.h3
+		{
+			font-size: 8;
+			font-weight: bold;
+			color: #FFFFFF;
+		}
+		
+		.h4
+		{
+			font-size: 10;
+			font-weight: bold;
+			color: #FFFFFF;			
+		}
+		
+		renderers|ImageLayoutControlDropDownItemRenderer .h3
+		{
+			font-size: 10;
+			font-weight: bold;
+			color: #000000;			
+		}
+		
+	</fx:Style>
+
+	
+	<fx:Declarations>
+		<imagelayout:LayoutGalleryContext contextView="{this}"/>
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:HorizontalLayout gap="0"/>
+	</s:layout>
+
+	<s:Scroller height="100%">
+		<components:ImageLayoutControlView height="100%"/>
+	</s:Scroller>
+
+	<components:ImageLayoutView 
+		width="100%"
+		height="100%"
+		id="gallery" />
+	
+</s:Application>

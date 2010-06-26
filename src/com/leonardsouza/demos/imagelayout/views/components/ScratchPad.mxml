@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx">
+	
+	<fx:Script>
+		<![CDATA[
+	
+			[Bindable]
+			public var bitmap:Bitmap;
+
+		]]>
+	</fx:Script>
+	
+	<s:Group
+		id="padGroup"
+		width="100%"
+		height="{padGroup.width}">
+		<s:Rect
+			width="100%"
+			height="100%"
+			radiusX="8"
+			radiusY="8">
+			<s:fill>
+				<s:SolidColor color="#FFFFFF" alpha=".15"/>
+			</s:fill>
+		</s:Rect>	
+		
+		<mx:Image
+			id="bitmapImage"
+			verticalCenter="0"
+			horizontalCenter="0"
+			width="80%"
+			height="80%"
+			source="{bitmap}" />	
+	</s:Group>
+
+	<s:Group
+		width="100%"
+		height="35">
+		
+		<s:Rect
+			width="100%"
+			height="100%"
+			radiusX="8"
+			radiusY="8">
+			<s:fill>
+				<s:SolidColor color="#FFFFFF" alpha=".15"/>
+			</s:fill>
+		</s:Rect>
+	
+		<s:HGroup
+			id="tools"
+			left="10"
+			gap="0"
+			verticalCenter="0"
+			verticalAlign="middle">
+			
+			<s:Group
+				id="tip1"
+				width="11"
+				height="11"
+				mouseEnabledWhereTransparent="true">
+				<s:Ellipse
+					width="2"
+					height="2"
+					verticalCenter="0" horizontalCenter="0">
+					<s:fill>
+						<s:SolidColor color="#FFFFFF" />
+					</s:fill>
+				</s:Ellipse>
+			</s:Group>
+	
+			<s:Group
+				id="tip2"
+				width="11"
+				height="11"
+				mouseEnabledWhereTransparent="true">
+				<s:Ellipse
+					width="5"
+					height="5"
+					verticalCenter="0" horizontalCenter="0">
+					<s:fill>
+						<s:SolidColor color="#FFFFFF" />
+					</s:fill>
+				</s:Ellipse>
+			</s:Group>
+			
+			<s:Group
+				id="tip3"
+				width="11"
+				height="11"
+				mouseEnabledWhereTransparent="true">
+				<s:Ellipse
+					width="8"
+					height="8"
+					verticalCenter="0" horizontalCenter="0">
+					<s:fill>
+						<s:SolidColor color="#FFFFFF" />
+					</s:fill>
+				</s:Ellipse>
+			</s:Group>
+	
+			<s:Group
+				id="tip4"
+				width="15"
+				height="11"
+				mouseEnabledWhereTransparent="true">
+				<s:Ellipse
+					width="10"
+					height="10"
+					verticalCenter="0" horizontalCenter="0">
+					<s:fill>
+						<s:SolidColor color="#FFFFFF" />
+					</s:fill>
+				</s:Ellipse>
+			</s:Group>
+			
+			<s:Group
+				id="tip5"
+				width="17"
+				height="11"
+				mouseEnabledWhereTransparent="true">
+				<s:Ellipse
+					width="15"
+					height="15"
+					verticalCenter="0" horizontalCenter="0">
+					<s:fill>
+						<s:SolidColor color="#FFFFFF" />
+					</s:fill>
+				</s:Ellipse>
+			</s:Group>
+			
+		</s:HGroup>
+
+		<mx:Image
+			id="eraser"
+			source="@Embed('assets/eraser.png')"
+			verticalCenter="0"
+			left="{tools.width + 15}"
+			width="15"
+			height="15"/>
+		
+		<mx:ColorPicker
+			id="colorPicker"
+			verticalCenter="0"
+			focusAlpha="0"
+			selectedColor="0xFFFFFF"
+			right="{alphaSlider.width + 15}"
+			width="25"
+			height="25"/>
+	
+		<s:Label
+			id="alphaLabel"
+			styleName="h3"
+			textAlign="center"
+			alpha=".75" 
+			verticalCenter="{-alphaLabel.height-1}"
+			right="{alphaSlider.width-35}"
+			text="alpha {alphaSlider.value}%"/>
+		
+		<s:HSlider
+			id="alphaSlider"
+			maximum="100"
+			minimum="0"
+			right="10"
+			value="100"
+			width="60"
+			verticalCenter="0"/>			
+		
+	</s:Group>
+	
+</s:VGroup>

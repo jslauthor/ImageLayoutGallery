@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 opaqueBackground="0x000000"
+		 minWidth="200"
+		 minHeight="600" 
+		 xmlns:views="com.leonardsouza.demos.imagelayout.views.*" 
+		 xmlns:components="com.leonardsouza.demos.imagelayout.views.components.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.leonardsouza.demos.imagelayout.views.components.renderers.ImageLayoutControlDropDownItemRenderer;
+			
+			public var fileRef:FileReference = new FileReference();
+			
+			[Bindable]
+			public var requiredElements:uint;
+			
+			[Bindable]
+			public var totalElements:uint;
+			
+		]]>
+	</fx:Script>
+
+	<s:VGroup
+		id="content"
+		top="10" left="10" right="15">
+		
+		<s:VGroup
+			alpha=".5"
+			paddingBottom="10"
+			gap="5">
+			<s:Label
+				styleName="h1"
+				text="Image Layout Demo"/>
+			<s:Label
+				styleName="h2"
+				text="by Leonard Souza"/>
+		</s:VGroup>
+
+		<s:VGroup
+			paddingBottom="10"
+			gap="0"
+			width="100%">
+			<s:Line
+				width="100%"
+				horizontalCenter="0"
+				verticalCenter="0">
+				<s:stroke>
+					<s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".2" />
+				</s:stroke>
+			</s:Line>		
+			<s:Line
+				width="100%"
+				horizontalCenter="0"
+				verticalCenter="0">
+				<s:stroke>
+					<s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".1" />
+				</s:stroke>
+			</s:Line>	
+		</s:VGroup>
+		
+		<s:Label
+			text="SELECTED IMAGE"
+			styleName="h3"
+			alpha=".75" />
+		
+		<s:Group
+			width="205"
+			height="150"
+			id="imageGroup">
+
+			<s:Rect
+				width="100%"
+				height="100%"
+				radiusX="8"
+				radiusY="8">
+				<s:fill>
+					<s:SolidColor color="#FFFFFF" alpha=".15"/>
+				</s:fill>
+			</s:Rect>		
+			
+			<mx:Image
+				id="previewImage"
+				width="80%" 
+				height="80%" />	
+			
+		</s:Group>	
+
+		<s:VGroup
+			width="100%"
+			paddingTop="10">
+			
+			<s:DropDownList
+				bottom="0"
+				id="imageDropDown"
+				width="100%"
+				requireSelection="true"
+				labelField="itemName"
+				selectedIndex="0"
+				itemRenderer="com.leonardsouza.demos.imagelayout.views.components.renderers.ImageLayoutControlDropDownItemRenderer" />			
+			
+		</s:VGroup>
+		
+		<s:VGroup
+			width="100%"
+			paddingTop="10">
+	
+			<s:Label
+				text="LOAD AN IMAGE"
+				styleName="h3"
+				alpha=".75" />
+			
+			<s:HGroup
+				verticalAlign="middle">
+				<s:TextInput
+					editable="false"
+					id="loadImageInput"
+					width="80%" />
+				<s:Button 
+					enabled="{loadImageInput.text != ''}"
+					id="loadImageButton"
+					width="20%"
+					label="GO" />
+			</s:HGroup>
+			
+		</s:VGroup>
+
+		<s:VGroup
+			paddingBottom="10"
+			paddingTop="10"
+			gap="0"
+			width="100%">
+			<s:Line
+				width="100%"
+				horizontalCenter="0"
+				verticalCenter="0">
+				<s:stroke>
+					<s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".2" />
+				</s:stroke>
+			</s:Line>		
+			<s:Line
+				width="100%"
+				horizontalCenter="0"
+				verticalCenter="0">
+				<s:stroke>
+					<s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".1" />
+				</s:stroke>
+			</s:Line>	
+		</s:VGroup>
+		
+		<s:VGroup
+			width="100%">
+			
+			<s:Label
+				text="LAYOUT PROPERTIES"
+				styleName="h3"			
+				alpha=".75" />
+			
+			<s:VGroup width="100%" verticalAlign="bottom">
+				<s:Label text="grid interval" styleName="h4" alpha=".75"/>
+				<s:HSlider
+					id="gridInterval"
+					liveDragging="false"
+					maximum="70"
+					minimum="0"
+					value="0" 
+					width="100%" />
+			</s:VGroup>
+			
+			<s:VGroup width="100%" verticalAlign="bottom">
+				<s:Label text="contrast threshold" styleName="h4" alpha=".75"/>
+				<s:HSlider
+					id="contrastThreshold"
+					liveDragging="false"
+					maximum="100"
+					minimum="0"
+					value="0" 
+					width="100%" />	
+			</s:VGroup>
+				
+			<s:VGroup width="100%" verticalAlign="bottom">
+				<s:Label text="depth factor" styleName="h4" alpha=".75"/>
+				<s:HSlider
+					id="depthFactor"
+					liveDragging="false"
+					maximum="100"
+					minimum="-100"
+					value="-15" 
+					width="100%" />
+			</s:VGroup>				
+
+			<s:Label
+				text="required elements: {requiredElements}"
+				styleName="h4"			
+				alpha=".75" />
+			
+			<s:Label
+				text="total elements: {totalElements}"
+				styleName="h4"			
+				alpha=".75" />
+			
+			<s:HGroup
+				verticalAlign="middle"
+				gap="0">
+				<s:CheckBox
+					id="animate"
+					selected="true" />
+				<s:Label
+					text="Animate?"
+					styleName="h4"
+					alpha=".75"/>
+			</s:HGroup>
+			
+		</s:VGroup>
+
+		<s:VGroup
+			paddingTop="10"
+			paddingBottom="10"
+			gap="0"
+			width="100%">
+			<s:Line
+				width="100%"
+				horizontalCenter="0"
+				verticalCenter="0">
+				<s:stroke>
+					<s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".2" />
+				</s:stroke>
+			</s:Line>		
+			<s:Line
+				width="100%"
+				horizontalCenter="0"
+				verticalCenter="0">
+				<s:stroke>
+					<s:SolidColorStroke color="#FFFFFF" weight="1" alpha=".1" />
+				</s:stroke>
+			</s:Line>	
+		</s:VGroup>
+		
+		<s:VGroup
+			id="scratchPadGroup"
+			width="100%">
+			
+			<s:Label
+				text="SCRATCH PAD"
+				styleName="h3"
+				alpha=".75" />
+
+			<components:ScratchPad
+				id="scratchPad"
+				width="100%" />
+			
+		</s:VGroup>
+		
+	</s:VGroup>
+	
+</s:Group>

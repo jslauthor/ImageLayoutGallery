@@ -1,5 +1,10 @@
 package com.leonardsouza.display.layouts
 {
+	import com.gskinner.motion.GTween;
+	import com.gskinner.motion.easing.Back;
+	import com.gskinner.motion.easing.Sine;
+	import com.leonardsouza.display.layouts.events.ImageLayoutElementEvent;
+	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Matrix3D;
@@ -25,11 +30,19 @@ package com.leonardsouza.display.layouts
 		** Variable declarations
 		*/
 		
+		public static var ANIMATION_EXPLODE:String = "explosionAnimation";
+		
 		private var _contrastThreshold:uint = 50;
 		private var _gridInterval:uint = 10;
 		private var _source:Bitmap;
 		private var _requiredElements:int;
 		private var _depthFactor:int = 10;
+		
+		private var _animate:Boolean = false;
+		private var _animationType:String = ANIMATION_EXPLODE;
+		private var _animationDuration:int = 1;
+		private var _animationStrength:int = 400;
+		private var _animationEase:Function = Back.easeInOut;
 		
 		protected var _layoutVector:Vector.<Vector3D>;
 
@@ -88,6 +101,7 @@ package com.leonardsouza.display.layouts
 		public function set depthFactor(value:int):void
 		{
 			_depthFactor = value;
+			if (target) target.invalidateDisplayList();
 		}
 		
 		public function get requiredElements():int
@@ -98,6 +112,56 @@ package com.leonardsouza.display.layouts
 		public function set requiredElements(value:int):void
 		{
 			_requiredElements = value;
+		}
+
+		public function get animate():Boolean
+		{
+			return _animate;
+		}
+		
+		public function set animate(value:Boolean):void
+		{
+			_animate = value;
+		}
+
+		public function get animationType():String
+		{
+			return _animationType;
+		}
+		
+		public function set animationType(value:String):void
+		{
+			_animationType = value;
+		}
+
+		public function get animationEase():Function
+		{
+			return _animationEase;
+		}
+		
+		public function set animationEase(value:Function):void
+		{
+			_animationEase = value;
+		}
+		
+		public function get animationStrength():int
+		{
+			return _animationStrength;
+		}
+		
+		public function set animationStrength(value:int):void
+		{
+			_animationStrength = value;
+		}
+		
+		public function get animationDuration():int
+		{
+			return _animationDuration;
+		}
+		
+		public function set animationDuration(value:int):void
+		{
+			_animationDuration = value;
 		}
 		
 		/*
@@ -155,6 +219,7 @@ package com.leonardsouza.display.layouts
 			}
 			
 			requiredElements = reqElements;
+			dispatchEvent(new ImageLayoutElementEvent(ImageLayoutElementEvent.ELEMENT_CHANGE, requiredElements, target.numElements));
 			scaledSource.dispose();
 		}
 		
@@ -164,7 +229,7 @@ package com.leonardsouza.display.layouts
 		
 		override public function updateDisplayList(w:Number, h:Number):void
 		{
-			if (!target || !_source) return;
+			if (!target || !_source || _source.height + _source.width < 2) return;
 			super.updateDisplayList(w, h);
 
 			arrangeByImage();
@@ -199,14 +264,44 @@ package com.leonardsouza.display.layouts
 					vec3D = _layoutVector[i];
 					if (vec3D != null)
 					{
+
 						if (!el || !el.includeInLayout) continue;
-						
 						UIComponent(el).visible = true;
 						matrix = el.getLayoutMatrix3D();
-						var newVector:Vector.<Vector3D> = matrix.decompose();
-						newVector[0] = vec3D;
-						matrix.recompose(newVector);
-						el.setLayoutMatrix3D(matrix, false);	
+						
+						if (animate)
+						{
+							var originVector:Vector.<Vector3D> = matrix.decompose();
+							//originVector[0] = new Vector3D(Math.random()*animationStrength, Math.random()*animationStrength, randNeg()*Math.random()*animationStrength);
+							originVector[0] = new Vector3D(vec3D.x, vec3D.y, randNeg()*Math.random()*animationStrength);
+							var tweenProxyObject:Object = {x:originVector[0].x, y:originVector[0].y, z:originVector[0].z};
+							matrix.recompose(originVector);
+							el.setLayoutMatrix3D(matrix, false);
+							
+							var tween:GTween = new GTween();
+							tween.autoPlay = false;
+							tween.target = tweenProxyObject;
+							tween.data = {element:el, origin:originVector};
+							tween.setValues({x:vec3D.x, y:vec3D.y, z:vec3D.z});
+							tween.ease = animationEase;
+							tween.duration = animationDuration;
+							tween.onChange = function f():void
+							{
+								var el:ILayoutElement = ILayoutElement(this.data.element);
+								var mtx:Matrix3D = el.getLayoutMatrix3D();
+								Vector.<Vector3D>(this.data.origin)[0] = new Vector3D(this.target.x, this.target.y, this.target.z);
+								mtx.recompose(Vector.<Vector3D>(this.data.origin));
+								el.setLayoutMatrix3D(mtx, false);
+							}
+							tween.paused = false;
+						}
+						else
+						{
+							var newVector:Vector.<Vector3D> = matrix.decompose();
+							newVector[0] = vec3D;
+							matrix.recompose(newVector);
+							el.setLayoutMatrix3D(matrix, false);	
+						}
 						elementCounter++;
 					}
 					else
@@ -265,5 +360,10 @@ package com.leonardsouza.display.layouts
 			return red << 16 | green << 8 | blue;
 		}
 
+		private function randNeg():int
+		{
+			return Math.random() >= .5 ? 1 : -1;
+		}
+		
 	}
 }
